@@ -1,8 +1,6 @@
-# console_view.py
 
 class ConsoleView:
     def show_menu(self):
-        #   def show_menu(self):
         print("\nМеню:")
         print("1. Показать все заметки")
         print("2. Добавить заметку")
@@ -11,20 +9,29 @@ class ConsoleView:
         print("5. Выход")
 
     def get_user_choice(self):
-        return int(input("Введите номер пункта меню: "))
+        while True:
+            try:
+                return int(input("Введите номер пункта меню: "))
+            except ValueError:
+                print("Ошибка: Введите цифру.")
 
-    def get_note_data(self):
-        head = input("Введите заголовок заметки: ")
-        body = input("Введите текст заметки: ")
-        return head, body
+    def get_note_data(self, message, note_data):
+        if note_data:
+            print(f"{message} (было: {note_data}): ", end="")
+        else:
+            print(f"{message}: ", end="")
+        return input()
 
     def get_note_id(self):
         return int(input("Введите id заметки для редактирования или удаления: "))
 
     def show_all_notes(self, notes):
-        print("\nСписок заметок:")
-        for note in notes:
-            print(f"ID: {note.id}, Заголовок: {note.head}, Текст: {note.body}, Дата: {note.date}")
+        if not notes:
+            print("Записи отсутствуют. Создайте заметку.")
+        else:
+            print("\nСписок заметок:")
+            for note in notes:
+                print(f"ID: {note.id}, Заголовок: {note.head}, Текст: {note.body}, Дата: {note.date}")
 
     def show_note_details(self, note):
         if note:
@@ -37,3 +44,4 @@ class ConsoleView:
 
     def show_message(self, message):
         print(message)
+

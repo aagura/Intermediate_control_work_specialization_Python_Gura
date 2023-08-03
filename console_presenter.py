@@ -1,6 +1,3 @@
-# console_presenter.py
-from console_view import ConsoleView
-from note_model import NoteModel
 
 class ConsolePresenter:
     def __init__(self, view, model):
@@ -8,11 +5,18 @@ class ConsolePresenter:
         self.model = model
 
     def show_all_notes(self):
-        notes = self.model.notes
-        self.view.show_all_notes(notes)
+        load_result = self.model.load_notes()
+        if load_result == "Записи прочитаны успешно":
+            notes = self.model.notes
+            self.view.show_all_notes(notes)
+        elif load_result == "Файл не найден":
+            self.view.show_message("Записи отсутствуют. Создайте заметку.")
+        else:
+            self.view.show_message(load_result)
 
     def add_note(self):
-        head, body = self.view.get_note_data()
+        head = self.view.get_note_data("Введите заголовок заметки", None)
+        body = self.view.get_note_data("Введите текст заметки", None)
         note = self.model.add_note(head, body)
         self.view.show_message(f"Заметка ID: {note.id} успешно добавлена!")
 
@@ -20,17 +24,18 @@ class ConsolePresenter:
         note_id = self.view.get_note_id()
         note = self.model.get_note_by_id(note_id)
         if note:
-            head, body = self.view.get_note_data()
-            edited_note = self.model.edit_note(note_id, head, body)
+            updated_head = self.view.get_note_data("Введите новый заголовок заметки", note.head)
+            updated_body = self.view.get_note_data("Введите новое тело заметки", note.body)
+            edited_note = self.model.edit_note(note_id, updated_head, updated_body)
             if edited_note:
                 self.view.show_message(f"Заметка ID: {edited_note.id} успешно отредактирована!")
             else:
-                self.view.show_message("Ошибка при редактировании заметки.")
+                self.view.show_message("Заметка не найдена!")
         else:
             self.view.show_message("Заметка не найдена!")
 
     def delete_note(self):
-        note_id = self.view.get_note_id()
+        note_id = int(self.view.get_note_id())
         deleted_note = self.model.delete_note_by_id(note_id)
         if deleted_note:
             self.view.show_message(f"Заметка ID: {deleted_note.id} успешно удалена!")
@@ -54,3 +59,6 @@ class ConsolePresenter:
                 break
             else:
                 self.view.show_message("Некорректный выбор. Попробуйте еще раз.")
+
+
+
