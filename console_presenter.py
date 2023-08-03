@@ -9,6 +9,15 @@ class ConsolePresenter:
         if load_result == "Записи прочитаны успешно":
             notes = self.model.notes
             self.view.show_all_notes(notes)
+            choice = self.view.get_yes_or_no("Отфильтровать под дате? Y/N")
+            if choice == "Y":
+                start_date = self.view.get_date("Введите начальную дату (в формате YYYY-MM-DD)")
+                end_date = self.view.get_date("Введите конечную дату (в формате YYYY-MM-DD)")
+                filtered_notes = self.model.get_notes_by_date_range(start_date, end_date)
+                if not filtered_notes:
+                    self.view.show_no_notes_in_period()
+                else:
+                    self.view.show_all_notes(filtered_notes)
         elif load_result == "Файл не найден":
             self.view.show_message("Записи отсутствуют. Создайте заметку.")
         else:

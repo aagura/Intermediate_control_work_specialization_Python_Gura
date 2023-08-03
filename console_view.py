@@ -1,4 +1,7 @@
 
+from datetime import datetime
+
+
 class ConsoleView:
     def show_menu(self):
         print("\nМеню:")
@@ -44,4 +47,25 @@ class ConsoleView:
 
     def show_message(self, message):
         print(message)
+    
+
+    
+    def show_no_notes_in_period(self):
+        print("В заданном периоде заметки отсутствуют.")
+
+    def get_yes_or_no(self, message):
+        while True:
+            choice = input(message + " (Y/N): ").strip().upper()
+            if choice == "Y" or choice == "N":
+                return choice
+            print("Ошибка: Введите 'Y' или 'N'.")
+
+    def get_date(self, message):
+        while True:
+            date_str = input(message + " (Формат: ГГГГ-ММ-ДД): ")
+            try:
+                date = datetime.strptime(date_str, '%Y-%m-%d')
+                return date
+            except ValueError:
+                print("Ошибка: Введите дату в корректном формате (ГГГГ-ММ-ДД).")
 

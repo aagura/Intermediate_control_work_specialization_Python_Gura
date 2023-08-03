@@ -69,3 +69,10 @@ class NoteModel:
             if note.id == note_id:
                 return note
         return None
+    
+    def get_notes_by_date_range(self, start_date, end_date):
+        filtered_notes = []
+        for note in self.notes:
+            if start_date <= note.date <= end_date:
+                filtered_notes.append(note)
+        return filtered_notes
